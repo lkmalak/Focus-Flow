@@ -49,15 +49,16 @@ export default function Header() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F7F4F3",
-     marginLeft: Platform.OS === "web" ? 250 : 0,
+    backgroundColor: "#fff",
+    
   },
   header: {
     flexDirection: "row",
+
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 20,
     paddingTop: 10,
-     marginLeft: Platform.OS === "web" ? 250 : 0,
+     marginLeft: Platform.OS === "web" ? 0 : 0,
   },
 });

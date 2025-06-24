@@ -3,7 +3,7 @@ import {
   SafeAreaView,
   Text,
   View,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import Checkbox from "expo-checkbox";
 import { Ionicons } from "@expo/vector-icons";
@@ -85,38 +85,42 @@ export default function TaskList({ searchQuery }) {
       console.log(error);
     }
   };
-  const onSearch = (query: string) => {
-    if (query == "") {
+  useEffect(() => {
+    if (searchQuery === "") {
       setTodos(oldTodos);
     } else {
-      const filteredTodos = todos.filter((todo) =>
-        todo.title.toLowerCase().includes(query.toLowerCase())
+      const filtered = oldTodos.filter((todo) =>
+        todo.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setTodos(filteredTodos);
+      setTodos(filtered);
     }
-  };
-
-  useEffect(() => {
-    onSearch(searchQuery);
   }, [searchQuery]);
-
 
   return (
     <SafeAreaView style={styles.container}>
-   
-      {/* <View style={styles.searchBar}>
-        <Ionicons name="search" size={24} color={"#333"} />
-        <TextInput
-          placeholder="Search"
-          value={searchQuery}
-          onChangeText={(text) => setSearchQuery(text)}
-          style={styles.searchInput}
-          clearButtonMode="always"
-        />
-      </View> */}
+      <Text
+        style={{
+          fontSize: 24,
+          fontWeight: "bold",
+          color: "#333",
+          marginBottom: 20,
+        }}
+      >
+        {" "}
+        All Tasks
+      </Text>
 
       <FlatList
         data={[...todos].reverse()}
+        style={{
+          flex: 1,
+
+          paddingBottom: 10,
+
+          paddingHorizontal: 10,
+
+          backgroundColor: "#fff",
+        }}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <ToDoItem
@@ -130,7 +134,7 @@ export default function TaskList({ searchQuery }) {
       <KeyboardAvoidingView
         style={styles.footer}
         behavior="padding"
-        keyboardVerticalOffset={40}
+        keyboardVerticalOffset={90}
       >
         <TextInput
           placeholder="Add New Todo"
@@ -186,36 +190,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: "#f5f5f5",
-    marginLeft: Platform.OS === "web" ? 250 : 0,
-  },
- 
-  searchBar: {
-    flexDirection: "row",
+    paddingVertical: 20,
+    marginLeft: Platform.OS === "web" ? 0 : 0,
+    padding: 20,
     backgroundColor: "#fff",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: Platform.OS === "ios" ? 16 : 6,
-    borderRadius: 10,
-    gap: 10,
-    marginBottom: 20,
   },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: "#333",
-  },
+
   todoContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     backgroundColor: "#f5f5f5",
-    padding: 16,
+    padding: 13,
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   todoInfoContainer: {
     flexDirection: "row",
-    gap: 10,
+    gap: 20,
     alignItems: "center",
   },
   todoText: {
@@ -227,10 +218,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     bottom: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
   },
   newTodoInput: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#f5f5f5",
     padding: 16,
     borderRadius: 10,
     fontSize: 16,

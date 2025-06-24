@@ -36,9 +36,9 @@ const [isLoading, setIsLoading] = useState(true);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F7F4F3",
+    backgroundColor: "#fff",
     paddingVertical: 20,
-    marginLeft: Platform.OS === "web" ? 250 : 0,
+    marginLeft: Platform.OS === "web" ? 0 : 0,
   },
 });
 

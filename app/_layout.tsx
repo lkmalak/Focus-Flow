@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Platform, Text, View } from "react-native";
 import React, { Component, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -9,7 +9,9 @@ import TabTwoScreen from "./(tabs)/two";
 import TaskList, { onSearch } from "@/TaskList";
 import Header from "@/header";
 import home from "@/home";
+import { Dimensions } from "react-native";
 
+const { width } = Dimensions.get("window");
 const { size, color } = { size: 24, color: "#1c8bfa" };
 const MyDrawer = createDrawerNavigator();
 type ToDoType = {
@@ -19,8 +21,8 @@ type ToDoType = {
 };
 
 export default function DrawerLayout() {
-const [searchQuery, setSearchQuery] = useState("");
-
+  const [searchQuery, setSearchQuery] = useState("");
+  const isWeb = Platform.OS === "web";
   return (
     <MyDrawer.Navigator
       screenOptions={{
@@ -28,29 +30,44 @@ const [searchQuery, setSearchQuery] = useState("");
         drawerActiveTintColor: color,
         drawerInactiveTintColor: "#333",
         drawerLabelStyle: {
-          marginLeft: 22,
+          paddingHorizontal: 20,
+          marginLeft: 23,
           fontSize: 14,
           fontWeight: "500",
           color: "#333",
+          textTransform: "capitalize",
+          fontFamily: "Poppins_500Medium",
+         
         },
+       
         drawerType: "slide",
-        drawerIcon: ({ color }) => (
-          <Ionicons name="menu-outline" size={size} color={color} />
+        drawerIcon: () => (
+          <Ionicons
+            name="menu-outline"
+            size={size}
+            color={"#fff"}
+            focus="true"
+          />
         ),
         drawerStyle: {
-          backgroundColor: "#f7f4f3",
-          width: 240,
+          backgroundColor: "#fff",
+          shadowColor: "transparent",
+          paddingTop: 10,
+          marginLeft: Platform.OS === "web" ? 0 : 0,
+          marginTop: Platform.OS === "web" ? 20 : 0,
+          
         },
 
         headerStyle: {
-          backgroundColor: "#f7f4f3",
+           marginLeft: Platform.OS === "web" ? 20 : 0,
+
+          backgroundColor: "#fff",
           height: 80,
           shadowColor: "transparent",
         },
         headerTitle: () => <Header />,
-        headerTitleStyle: { fontSize: 20, fontWeight: "bold", color: "#333" },
+        headerTitleStyle: { fontSize: 20, fontWeight: "bold", color: "#fff" },
       }}
-      initialRouteName="All Task"
     >
       <MyDrawer.Screen
         name="Home"
@@ -63,20 +80,43 @@ const [searchQuery, setSearchQuery] = useState("");
       />
       <MyDrawer.Screen
         name="All Task"
-        
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons name="layers-outline" size={24} color={color} />
           ),
+          
           headerSearchBarOptions: {
-      placeholder: "Search",
-      onChangeText: (e) => setSearchQuery(e.nativeEvent.text),
-      onCancelButtonPress: () => setSearchQuery(""),
-    },
-  }}
->
-  {(props) => <TaskList {...props} searchQuery={searchQuery} />}
-</MyDrawer.Screen>
+            placeholder: "Search",
+            onChangeText: (e) => setSearchQuery(e.nativeEvent.text),
+            onCancelButtonPress: () => setSearchQuery(""),
+            onSubmitEditing: () =>
+              console.log("Recherche validée : ", searchQuery),
+            hideWhenScrolling: true,
+            showCancelButton: true,
+            clearButtonMode: "always",
+            autoFocus: true,
+
+            inputStyle: {
+              color: "#fff",
+              fontSize: 10,
+              fontWeight: "500",
+            },
+            inputContainerStyle: {
+              backgroundColor: "#1c8bfa",
+              borderRadius: 8,
+              paddingHorizontal: 10,
+            },
+            containerStyle: {
+              width: isWeb ? (width > 1000 ? 400 : 250) : undefined,
+              marginLeft: isWeb ? (width > 1000 ? 100 : 30) : undefined,
+              paddingTop: 10,
+              marginBottom: 10,
+            },
+          },
+        }}
+      >
+        {(props) => <TaskList {...props} searchQuery={searchQuery} />}
+      </MyDrawer.Screen>
       <MyDrawer.Screen
         name="Profile"
         component={TabTwoScreen}
