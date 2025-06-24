@@ -21,10 +21,9 @@ type ToDoType = {
   isDone: boolean;
 };
 
-export default function TaskList() {
+export default function TaskList({ searchQuery }) {
   const [todos, setTodos] = useState<ToDoType[]>([]);
   const [todoText, setTodoText] = useState<string>("");
-  const [searchQuery, setSearchQuery] = useState<string>("");
   const [oldTodos, setOldTodos] = useState<ToDoType[]>([]);
 
   useEffect(() => {
