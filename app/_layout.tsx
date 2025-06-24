@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import TabOneScreen from "./(tabs)";
 import TabTwoScreen from "./(tabs)/two";
-import TaskList, { onSearch } from "@/TaskList";
+import TaskList from "@/TaskList";
 import Header from "@/header";
 import home from "@/home";
 import { Dimensions } from "react-native";
@@ -36,10 +36,8 @@ export default function DrawerLayout() {
           fontWeight: "500",
           color: "#333",
           textTransform: "capitalize",
-          fontFamily: "Poppins_500Medium",
-         
         },
-       
+
         drawerType: "slide",
         drawerIcon: () => (
           <Ionicons
@@ -55,11 +53,10 @@ export default function DrawerLayout() {
           paddingTop: 10,
           marginLeft: Platform.OS === "web" ? 0 : 0,
           marginTop: Platform.OS === "web" ? 20 : 0,
-          
         },
 
         headerStyle: {
-           marginLeft: Platform.OS === "web" ? 20 : 0,
+          marginLeft: Platform.OS === "web" ? 20 : 0,
 
           backgroundColor: "#fff",
           height: 80,
@@ -79,12 +76,21 @@ export default function DrawerLayout() {
         }}
       />
       <MyDrawer.Screen
+        name="Profile"
+        component={TabTwoScreen}
+        options={{
+          drawerIcon: ({ color }) => (
+            <Ionicons name="person-outline" size={24} color={color} />
+          ),
+        }}
+      />
+      <MyDrawer.Screen
         name="All Task"
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons name="layers-outline" size={24} color={color} />
           ),
-          
+
           headerSearchBarOptions: {
             placeholder: "Search",
             onChangeText: (e) => setSearchQuery(e.nativeEvent.text),
@@ -117,15 +123,7 @@ export default function DrawerLayout() {
       >
         {(props) => <TaskList {...props} searchQuery={searchQuery} />}
       </MyDrawer.Screen>
-      <MyDrawer.Screen
-        name="Profile"
-        component={TabTwoScreen}
-        options={{
-          drawerIcon: ({ color }) => (
-            <Ionicons name="person-outline" size={24} color={color} />
-          ),
-        }}
-      />
+
       <MyDrawer.Screen
         name="Settings"
         component={TabOneScreen}

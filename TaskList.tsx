@@ -103,50 +103,56 @@ export default function TaskList({ searchQuery }) {
           fontSize: 24,
           fontWeight: "bold",
           color: "#333",
+          margin: Platform.OS === "web" ? 20 : 0,
           marginBottom: 20,
         }}
       >
         {" "}
         All Tasks
       </Text>
-
-      <FlatList
-        data={[...todos].reverse()}
+      <View
         style={{
           flex: 1,
+          flexDirection: Platform.OS === "web" ? "row" : "column",
 
-          paddingBottom: 10,
-
-          paddingHorizontal: 10,
-
-          backgroundColor: "#fff",
         }}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <ToDoItem
-            todo={item}
-            deleteTodo={deleteTodo}
-            handleDone={handleDone}
-          />
-        )}
-      />
-
-      <KeyboardAvoidingView
-        style={styles.footer}
-        behavior="padding"
-        keyboardVerticalOffset={90}
       >
-        <TextInput
-          placeholder="Add New Todo"
-          value={todoText}
-          onChangeText={(text) => setTodoText(text)}
-          style={styles.newTodoInput}
-          autoCorrect={false}
+        <FlatList
+          data={[...todos].reverse()}
+          style={{
+            flex: 1,
+            
+            paddingBottom: 10,
+            paddingHorizontal: 10,
+            backgroundColor: "#fff",
+          }}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <ToDoItem
+              todo={item}
+              deleteTodo={deleteTodo}
+              handleDone={handleDone}
+            />
+          )}
         />
-        <TouchableOpacity style={styles.addButton} onPress={() => addTodo()}>
-          <Ionicons name="add" size={34} color={"#fff"} />
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+
+        <KeyboardAvoidingView
+          style={styles.footer}
+          behavior="padding"
+          keyboardVerticalOffset={90}
+        >
+          <TextInput
+            placeholder="Add New Todo"
+            value={todoText}
+            onChangeText={(text) => setTodoText(text)}
+            style={styles.newTodoInput}
+            autoCorrect={false}
+          />
+          <TouchableOpacity style={styles.addButton} onPress={() => addTodo()}>
+            <Ionicons name="add" size={34} color={"#fff"} />
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -189,6 +195,7 @@ const ToDoItem = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     paddingHorizontal: 20,
     paddingVertical: 20,
     marginLeft: Platform.OS === "web" ? 0 : 0,
@@ -197,6 +204,7 @@ const styles = StyleSheet.create({
   },
 
   todoContainer: {
+    width:Platform.OS === "web" ? "90%" : "100%",
     flexDirection: "row",
     justifyContent: "space-between",
     backgroundColor: "#f5f5f5",
@@ -215,11 +223,12 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "Start",
     justifyContent: "space-between",
     bottom: 40,
     paddingHorizontal: 10,
     paddingVertical: 10,
+    width:Platform.OS === "web" ? "50%" : "100%",
   },
   newTodoInput: {
     flex: 1,
