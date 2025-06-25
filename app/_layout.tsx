@@ -10,6 +10,11 @@ import TaskList from "@/TaskList";
 import Header from "@/header";
 import home from "@/home";
 import { Dimensions } from "react-native";
+import Profile from "./(tabs)/two";
+import LogoutScreen from "./Interfaces/Logout";
+import AboutScreen from "./(tabs)/_layout";
+
+
 
 const { width } = Dimensions.get("window");
 const { size, color } = { size: 24, color: "#1c8bfa" };
@@ -27,12 +32,13 @@ export default function DrawerLayout() {
     <MyDrawer.Navigator
       screenOptions={{
         headerShown: true,
+        headerTintColor: "#3e2bcc",
         drawerActiveTintColor: color,
         drawerInactiveTintColor: "#333",
         drawerLabelStyle: {
           paddingHorizontal: 20,
           marginLeft: 23,
-          fontSize: 14,
+          fontSize: 15,
           fontWeight: "500",
           color: "#333",
           textTransform: "capitalize",
@@ -57,13 +63,16 @@ export default function DrawerLayout() {
 
         headerStyle: {
           marginLeft: Platform.OS === "web" ? 20 : 0,
-
           backgroundColor: "#fff",
-          height: 80,
+          height: Platform.OS === "web" ? 60 : 100,
+          color: "#fff",
           shadowColor: "transparent",
+          shadowOffset: { width: 0, height: 0 },
+          borderBottomWidth: 0.5,
+          borderBottomColor: "#ccc",
+          borderRadius: 7,
         },
         headerTitle: () => <Header />,
-        headerTitleStyle: { fontSize: 20, fontWeight: "bold", color: "#fff" },
       }}
     >
       <MyDrawer.Screen
@@ -77,11 +86,24 @@ export default function DrawerLayout() {
       />
       <MyDrawer.Screen
         name="Profile"
-        component={TabTwoScreen}
+        component={Profile}
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons name="person-outline" size={24} color={color} />
           ),
+          headerTitle: "Profile",
+          headerTitleStyle: { fontSize: 23,paddingLeft:20, fontWeight: "bold", color: "#333" },
+           headerStyle: {
+          marginLeft: Platform.OS === "web" ? 20 : 0,
+          backgroundColor: "#fff",
+          height: Platform.OS === "web" ? 60 : 100,
+          color: "#fff",
+          shadowColor: "transparent",
+          shadowOffset: { width: 0, height: 0 },
+          borderBottomWidth: 0.5,
+          borderBottomColor: "#ccc",
+          borderRadius: 7,
+        },
         }}
       />
       <MyDrawer.Screen
@@ -90,7 +112,19 @@ export default function DrawerLayout() {
           drawerIcon: ({ color }) => (
             <Ionicons name="layers-outline" size={24} color={color} />
           ),
-
+          headerTitle: "All Tasks",
+         headerTitleStyle: { fontSize: 23,paddingLeft:20, fontWeight: "bold", color: "#333" },
+           headerStyle: {
+          marginLeft: Platform.OS === "web" ? 20 : 0,
+          backgroundColor: "#fff",
+          height: Platform.OS === "web" ? 60 : 100,
+          color: "#fff",
+          shadowColor: "transparent",
+          shadowOffset: { width: 0, height: 0 },
+          borderBottomWidth: 0.5,
+          borderBottomColor: "#ccc",
+          borderRadius: 7,
+        },
           headerSearchBarOptions: {
             placeholder: "Search",
             onChangeText: (e) => setSearchQuery(e.nativeEvent.text),
@@ -131,12 +165,43 @@ export default function DrawerLayout() {
           drawerIcon: ({ color }) => (
             <Ionicons name="settings-outline" size={24} color={color} />
           ),
+          headerTitleStyle: { fontSize: 23,paddingLeft:20, fontWeight: "bold", color: "#333" },
+          headerStyle: {
+          marginLeft: Platform.OS === "web" ? 20 : 0,
+          backgroundColor: "#fff",
+          height: Platform.OS === "web" ? 60 : 100,
+          color: "#fff",
+          shadowColor: "transparent",
+          shadowOffset: { width: 0, height: 0 },
+          borderBottomWidth: 0.5,
+          borderBottomColor: "#ccc",
+          borderRadius: 7,
+        },
         }}
       />
+      <MyDrawer.Screen
+        name="About"
+        component={AboutScreen}
+        options={{
+          drawerIcon: ({ color }) => (
+            <Ionicons name="information-circle-outline" size={24} color={color} />
+          ),
+          headerTitleStyle: { fontSize: 23,paddingLeft:20, fontWeight: "bold", color: "#333" },
+          headerStyle: {
+          marginLeft: Platform.OS === "web" ? 20 : 0,
+          backgroundColor: "#fff",
+          height: Platform.OS === "web" ? 60 : 100,
+          color: "#fff",
+          shadowColor: "transparent",
+          shadowOffset: { width: 0, height: 0 },
+          borderBottomWidth: 0.5,
+          borderBottomColor: "#ccc",
+          borderRadius: 7,
+        },
+        }}
+      />
+     
     </MyDrawer.Navigator>
   );
 }
 
-function setTodos(oldTodos: ToDoType[]) {
-  throw new Error("Function not implemented.");
-}

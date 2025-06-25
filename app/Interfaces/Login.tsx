@@ -1,137 +1,116 @@
-// import React, { useState, useEffect } from 'react';
-// import {
-//     View,
-//     StyleSheet,
-//     Image,
-//     Text,
-//     TextInput,
-//     Alert,
-// } from 'react-native';
-// // import AsyncStorage from '@react-native-async-storage/async-storage';
-// import SQLite from 'react-native-sqlite-storage';
-// import CustomButton from '../utils/CustomButton';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Platform,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// const db = SQLite.openDatabase(
-//     {
-//         name: 'MainDB',
-//         location: 'default',
-//     },
-//     () => { },
-//     error => { console.log(error) }
-// );
+interface LoginScreenProps {
+  setIsLoggedIn: (value: boolean) => void;
+  setIsSignup: (value: boolean) => void;
+}
 
-// export default function Login({ navigation }) {
+export default function LoginScreen({ setIsLoggedIn, setIsSignup }: LoginScreenProps) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-//     const [name, setName] = useState('');
-//     const [age, setAge] = useState('');
+  const handleLogin = async () => {
+    if (!username || !password) {
+      Alert.alert("Erreur", "Veuillez remplir tous les champs");
+      return;
+    }
 
-//     useEffect(() => {
-//         createTable();
-//         getData();
-//     }, []);
+    try {
+      const usersData = await AsyncStorage.getItem("users");
+      const users: { username: string; password: string }[] = usersData ? JSON.parse(usersData) : [];
 
-//     const createTable = () => {
-//         db.transaction((tx) => {
-//             tx.executeSql(
-//                 "CREATE TABLE IF NOT EXISTS "
-//                 + "Users "
-//                 + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Age INTEGER,Genre TEXT,Password TEXT );"
-//             )
-//         })
-//     }
+      const foundUser = users.find(
+        (u) => u.username === username && u.password === password
+      );
 
-//     const getData = () => {
-//         try {
-            
-//             db.transaction((tx) => {
-//                 tx.executeSql(
-//                     "SELECT Name, Age FROM Users",
-//                     [],
-//                     (tx, results) => {
-//                         var len = results.rows.length;
-//                         if (len > 0) {
-//                             navigation.navigate('App');
-//                         }
-//                     }
-//                 )
-//             })
-//         } catch (error) {
-//             console.log(error);
-//         }
-//     }
+      if (foundUser) {
+        await AsyncStorage.setItem("user", JSON.stringify(foundUser));
+        setIsLoggedIn(true);
+      } else {
+        Alert.alert("Erreur", "Identifiants incorrects");
+      }
+    } catch (error) {
+      Alert.alert("Erreur", "Une erreur est survenue lors de la connexion");
+      console.error(error);
+    }
+  };
 
-//     const setData = async () => {
-//         if (name.length == 0 || age.length == 0) {
-//             Alert.alert('Warning!', 'Please write your data.')
-//         } else {
-//             try {
-               
-//                 await db.transaction(async (tx) => {
-                  
-//                     await tx.executeSql(
-//                         "INSERT INTO Users (Name, Age) VALUES (?,?)",
-//                         [name, age]
-//                     );
-//                 })
-//                 navigation.navigate('App');
-//             } catch (error) {
-//                 console.log(error);
-//             }
-//         }
-//     }
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Connexion</Text>
+      <TextInput
+        placeholder="Nom d'utilisateur"
+        value={username}
+        onChangeText={setUsername}
+        style={styles.input}
+        autoCapitalize="none"
+      />
+      <TextInput
+        placeholder="Mot de passe"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        style={styles.input}
+      />
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Se connecter</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => setIsSignup(false)}>
+        <Text style={styles.link}>
+          Pas encore de compte ? S'inscrire
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
 
-//     return (
-//         <View style={styles.body} >
-//             <Image
-//                 style={styles.logo}
-//                 source={require('../../assets/owl.png')} 
-//             />
-//             <Text style={styles.text}>
-
-//             </Text>
-//             <TextInput
-//                 style={styles.input}
-//                 placeholder='Enter your name'
-//                 onChangeText={(value) => setName(value)}
-//             />
-//             <TextInput
-//                 style={styles.input}
-//                 placeholder='Enter your age'
-//                 onChangeText={(value) => setAge(value)}
-//             />
-//             <CustomButton
-//                 title='Login'
-//                 color='#1eb900'
-//                 onPressFunction={setData}
-//             />
-//         </View>
-//     )
-// }
-
-// const styles = StyleSheet.create({
-//     body: {
-//         flex: 1,
-//         alignItems: 'center',
-//         backgroundColor: '#0080ff',
-//     },
-//     logo: {
-//         width: 200,
-//         height: 100,
-//         margin: 20,
-//     },
-//     text: {
-//         fontSize: 30,
-//         color: '#ffffff',
-//         marginBottom: 130,
-//     },
-//     input: {
-//         width: 300,
-//         borderWidth: 1,
-//         borderColor: '#555',
-//         borderRadius: 10,
-//         backgroundColor: '#ffffff',
-//         textAlign: 'center',
-//         fontSize: 20,
-//         marginBottom: 10,
-//     }
-// })
+const styles = StyleSheet.create({
+  container: {
+   flex: 1,
+       paddingHorizontal: 20,
+       paddingVertical: 20,
+       marginLeft: Platform.OS === "web" ? 0 : 0,
+       padding: 20,
+   
+       backgroundColor: "#fff",
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 30,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 15,
+  },
+  button: {
+    backgroundColor: "#3498db",
+    padding: 14,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  buttonText: { 
+    color: "#fff", 
+    fontSize: 16, 
+    fontWeight: "bold" 
+  },
+  link: { 
+    textAlign: "center", 
+    color: "#3498db" 
+  },
+});

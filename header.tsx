@@ -33,9 +33,9 @@ export default function Header() {
           />
        <Text 
           style={{
-            fontSize: 20,
+            fontSize: 24,
             fontWeight: "bold",
-            color: "#333",
+            color: "#3e2bcc",
             marginLeft: 20,
           }}
         >

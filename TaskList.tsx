@@ -98,30 +98,19 @@ export default function TaskList({ searchQuery }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text
-        style={{
-          fontSize: 24,
-          fontWeight: "bold",
-          color: "#333",
-          margin: Platform.OS === "web" ? 20 : 0,
-          marginBottom: 20,
-        }}
-      >
-        {" "}
-        All Tasks
-      </Text>
+      
       <View
         style={{
           flex: 1,
           flexDirection: Platform.OS === "web" ? "row" : "column",
-
         }}
       >
+
         <FlatList
           data={[...todos].reverse()}
           style={{
             flex: 1,
-            
+
             paddingBottom: 10,
             paddingHorizontal: 10,
             backgroundColor: "#fff",
@@ -142,7 +131,7 @@ export default function TaskList({ searchQuery }) {
           keyboardVerticalOffset={90}
         >
           <TextInput
-            placeholder="Add New Todo"
+            placeholder="Add New Task"
             value={todoText}
             onChangeText={(text) => setTodoText(text)}
             style={styles.newTodoInput}
@@ -195,16 +184,16 @@ const ToDoItem = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     paddingHorizontal: 20,
     paddingVertical: 20,
     marginLeft: Platform.OS === "web" ? 0 : 0,
     padding: 20,
     backgroundColor: "#fff",
+    
   },
 
   todoContainer: {
-    width:Platform.OS === "web" ? "90%" : "100%",
+    width: Platform.OS === "web" ? "90%" : "100%",
     flexDirection: "row",
     justifyContent: "space-between",
     backgroundColor: "#f5f5f5",
@@ -228,7 +217,7 @@ const styles = StyleSheet.create({
     bottom: 40,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    width:Platform.OS === "web" ? "50%" : "100%",
+    width: Platform.OS === "web" ? "50%" : "100%",
   },
   newTodoInput: {
     flex: 1,
@@ -244,4 +233,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginLeft: 20,
   },
+  
 });

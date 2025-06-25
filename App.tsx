@@ -1,44 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Platform} from 'react-native';
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, SafeAreaView, View, Image } from "react-native";
-import TaskList from "./TaskList";
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import SignupScreen from './app/Interfaces/SignUp';
+import LoginScreen from './app/Interfaces/Login';
+import HomeScreen from './home';
+import LogoutScreen from './app/Interfaces/Logout';
+import { useState } from 'react';
 
+// 1. Créer les stacks
+const AuthStack = createStackNavigator();
+const AppStack = createStackNavigator();
 
-export default function App() {
-const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Simule un chargement
-    setTimeout(() => setIsLoading(false), 1000);
-  }, []);
-
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-         <Image
-        source={require("./assets/owl.png")}
-        style={{ width: 220, height: 220, marginBottom: 50 }}
-      />
-      </View>
-    );
-  }
+// 2. Stack d'authentification
+function AuthStackScreen() {
   return (
-    <SafeAreaView style={styles.container}>
-      
-    <TaskList />
-    <StatusBar style="auto" />
-    </SafeAreaView>
+    <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+      <AuthStack.Screen name="Login" component={LoginScreen} />
+      <AuthStack.Screen name="Signup" component={SignupScreen} />
+    </AuthStack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingVertical: 20,
-    marginLeft: Platform.OS === "web" ? 0 : 0,
-  },
-});
+// 3. Stack principale
+function AppStackScreen() {
+  return (
+    <AppStack.Navigator>
+      <AppStack.Screen name="Home" component={HomeScreen} />
+      <AppStack.Screen 
+        name="Logout" 
+        component={LogoutScreen}
+        options={{ headerShown: false }} 
+      />
+    </AppStack.Navigator>
+  );
+}
 
+// 4. Composant principal
+export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  return (
+    <NavigationContainer>
+      {isLoggedIn ? <AppStackScreen /> : <AuthStackScreen />}
+    </NavigationContainer>
+  );
+}
