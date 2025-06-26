@@ -17,6 +17,9 @@ interface SignupScreenProps {
 export default function SignupScreen({ setIsSignup }: SignupScreenProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [age, setAge] = useState("");
 
   const handleSignup = async () => {
     if (!username || !password) {
@@ -36,8 +39,8 @@ export default function SignupScreen({ setIsSignup }: SignupScreenProps) {
         Alert.alert("Erreur", "Ce nom d'utilisateur existe déjà.");
         return;
       }
-
-      users.push({ username, password });
+      const id =Math.random().toString(36).substring(2, 15);
+      users.push({id, username, password, email, fullName, age });
       await AsyncStorage.setItem("users", JSON.stringify(users));
       Alert.alert("Succès", "Compte créé avec succès.");
       setIsSignup(true);
@@ -54,6 +57,27 @@ export default function SignupScreen({ setIsSignup }: SignupScreenProps) {
         placeholder="Nom d'utilisateur"
         value={username}
         onChangeText={setUsername}
+        style={styles.input}
+        autoCapitalize="none"
+      />
+      <TextInput
+        placeholder="Adresse e-mail"
+        value={email}
+        onChangeText={setEmail}
+        style={styles.input}
+        autoCapitalize="none"
+      />
+      <TextInput
+        placeholder="Nom complet"
+        value={fullName}
+        onChangeText={setFullName}
+        style={styles.input}
+        autoCapitalize="none"
+      />
+      <TextInput
+        placeholder="Age"
+        value={age}
+        onChangeText={setAge}
         style={styles.input}
         autoCapitalize="none"
       />

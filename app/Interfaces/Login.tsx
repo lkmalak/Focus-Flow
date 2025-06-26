@@ -16,24 +16,25 @@ interface LoginScreenProps {
 }
 
 export default function LoginScreen({ setIsLoggedIn, setIsSignup }: LoginScreenProps) {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    if (!username || !password) {
+    if (!email || !password) {
       Alert.alert("Erreur", "Veuillez remplir tous les champs");
       return;
     }
 
     try {
       const usersData = await AsyncStorage.getItem("users");
-      const users: { username: string; password: string }[] = usersData ? JSON.parse(usersData) : [];
+      const users: { id: string; email: string; password: string }[] = usersData ? JSON.parse(usersData) : [];
 
       const foundUser = users.find(
-        (u) => u.username === username && u.password === password
+        (u) => u.email === email && u.password === password
       );
 
       if (foundUser) {
+
         await AsyncStorage.setItem("user", JSON.stringify(foundUser));
         setIsLoggedIn(true);
       } else {
@@ -50,8 +51,8 @@ export default function LoginScreen({ setIsLoggedIn, setIsSignup }: LoginScreenP
       <Text style={styles.title}>Connexion</Text>
       <TextInput
         placeholder="Nom d'utilisateur"
-        value={username}
-        onChangeText={setUsername}
+        value={email}
+        onChangeText={setEmail}
         style={styles.input}
         autoCapitalize="none"
       />

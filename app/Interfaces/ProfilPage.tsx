@@ -6,71 +6,78 @@ import {
   TouchableOpacity, 
   Image, 
   ScrollView,
-  Alert 
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ProfileScreen = ( ) => {
-  const [user, setUser] = useState({
-    name: 'Jean Dupont',
-    email: 'jean.dupont@example.com',
-    phone: '+33 6 12 34 56 78',
-    bio: 'Développeur mobile passionné par React Native',
-    avatar: 'https://randomuser.me/api/portraits/men/1.jpg'
-  });
-  const [isEditing, setIsEditing] = useState(false);
+const ProfileScreen = () => {
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
-  // Charger les données utilisateur au montage
+  // Charger les données utilisateur
   useEffect(() => {
     const loadUserData = async () => {
       try {
         const userData = await AsyncStorage.getItem('user');
         if (userData) {
-          setUser(JSON.parse(userData));
+          const parsedUser = JSON.parse(userData);
+        setUser({
+          id: parsedUser.id || '',
+          username: parsedUser.username || '',
+          name: parsedUser.name || '',
+          email: parsedUser.email || '',
+          age: parsedUser.age || '',
+          avatar: parsedUser.avatar || require('../../assets/images/inconnu.jpg')
+        });
+          alert('Bienvenue ' + JSON.parse(userData).username);
+
+        } else {
+          // Valeurs par défaut si aucun utilisateur n'est trouvé
+          setUser({
+            avatar: require('../../assets/images/inconnu.jpg') // Utilisation de require pour les images locales
+          });
+
         }
       } catch (error) {
         console.error('Erreur de chargement:', error);
+        Alert.alert('Erreur', 'Impossible de charger les données du profil');
+      } finally {
+        setIsLoading(false);
       }
     };
     
     loadUserData();
   }, []);
 
-  const handleLogout = async () => {
-    Alert.alert(
-      'Déconnexion',
-      'Êtes-vous sûr de vouloir vous déconnecter ?',
-      [
-        {
-          text: 'Annuler',
-          style: 'cancel'
-        },
-        { 
-          text: 'Déconnexion', 
-          onPress: async () => {
-            await AsyncStorage.removeItem('user');
-            navigation.navigate('Logout');
-          }
-        }
-      ]
-    );
-  };
+  
+
 
   const handleEditProfile = () => {
-    navigation.navigate('EditProfile', { user });
+    navigation.navigate('EditProfile',{user});
   };
 
+  if (isLoading || !user) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#3498db" />
+      </View>
+    );
+  }
+
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <View style={styles.header}>
         <Image 
-          source={{ uri: user.avatar }} 
-          style={styles.avatar}
-        />
-        <Text style={styles.name}>{user.name}</Text>
+  source={typeof user.avatar === 'string' ? { uri: user.avatar } : user.avatar}
+  style={styles.avatar}
+  onError={() => setUser(prev => ({...prev, avatar: require('../../assets/images/inconnu.jpg')}))}
+  defaultSource={require('../../assets/images/inconnu.jpg')}
+/>
+        <Text style={styles.name}>{user.username}</Text>
         <TouchableOpacity 
           style={styles.editButton}
           onPress={handleEditProfile}
@@ -82,29 +89,37 @@ const ProfileScreen = ( ) => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Informations personnelles</Text>
         
-        <View style={styles.infoItem}>
-          <Ionicons name="mail-outline" size={20} color="#666" />
-          <Text style={styles.infoText}>{user.email}</Text>
-        </View>
+        {user.email && (
+          <View style={styles.infoItem}>
+            <Ionicons name="mail-outline" size={20} color="#666" />
+            <Text style={styles.infoText}>{user.email}</Text>
+          </View>
+        )}
 
-        <View style={styles.infoItem}>
-          <Ionicons name="call-outline" size={20} color="#666" />
-          <Text style={styles.infoText}>{user.phone}</Text>
-        </View>
+        {user.age && (
+          <View style={styles.infoItem}>
+            <Ionicons name="call-outline" size={20} color="#666" />
+            <Text style={styles.infoText}>{user.age}</Text>
+          </View>
+        )}
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>À propos</Text>
-        <Text style={styles.bioText}>{user.bio}</Text>
-      </View>
+      {user.bio && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>À propos</Text>
+          <Text style={styles.bioText}>{user.bio}</Text>
+        </View>
+      )}
 
-      <TouchableOpacity 
-        style={styles.logoutButton}
-        onPress={handleLogout}
-      >
-        <Text style={styles.logoutText}>Déconnexion</Text>
-        <Ionicons name="log-out-outline" size={20} color="#e74c3c" />
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        {/* <TouchableOpacity 
+          style={[styles.actionButton, styles.editButton]}
+          onPress={handleEditProfile}
+        >
+          <Ionicons name="create-outline" size={20} color="#fff" />
+          <Text style={styles.actionButtonText}>Modifier le profil</Text>
+        </TouchableOpacity> */}
+      </View>
     </ScrollView>
   );
 };
@@ -112,26 +127,40 @@ const ProfileScreen = ( ) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#fff',
+  },
+  contentContainer: {
+    paddingBottom: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     alignItems: 'center',
-    padding: 20,
+    padding: 25,
     backgroundColor: '#fff',
-    marginBottom: 10,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 0.5,
   },
   avatar: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: 130,
+    height: 130,
+    borderRadius: 65,
     marginBottom: 15,
     borderWidth: 3,
-    borderColor: '#3498db',
+    borderColor: '#eee',
   },
   name: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
+    marginTop: 10,
   },
   editButton: {
     position: 'absolute',
@@ -146,8 +175,14 @@ const styles = StyleSheet.create({
   },
   section: {
     backgroundColor: '#fff',
-    padding: 15,
-    marginBottom: 10,
+    padding: 20,
+    marginBottom: 15,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 0.5,
   },
   sectionTitle: {
     fontSize: 18,
@@ -156,15 +191,15 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
-    paddingBottom: 5,
+    paddingBottom: 8,
   },
   infoItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   infoText: {
-    marginLeft: 10,
+    marginLeft: 12,
     fontSize: 16,
     color: '#555',
   },
@@ -173,22 +208,26 @@ const styles = StyleSheet.create({
     color: '#555',
     lineHeight: 24,
   },
-  logoutButton: {
+  buttonContainer: {
+    paddingHorizontal: 20,
+    marginTop: 10,
+  },
+  actionButton: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
     padding: 15,
-    marginTop: 20,
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#e74c3c',
+    marginBottom: 15,
   },
-  logoutText: {
-    color: '#e74c3c',
+  logoutButton: {
+    backgroundColor: '#3566fc',
+  },
+  actionButtonText: {
+    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
-    marginRight: 10,
+    marginLeft: 10,
   },
 });
 

@@ -3,20 +3,20 @@ import { View, Text, StyleSheet, ScrollView, Linking, TouchableOpacity } from 'r
 import { Ionicons } from '@expo/vector-icons';
 
 const AboutScreen = () => {
-  const openWebsite = () => {
-    Linking.openURL('https://votre-site.com');
-  };
+  // const openWebsite = () => {
+  //   Linking.openURL('https://votre-site.com');
+  // };
 
-  const openPrivacyPolicy = () => {
-    Linking.openURL('https://votre-site.com/privacy');
-  };
+  // const openPrivacyPolicy = () => {
+  //   Linking.openURL('https://votre-site.com/privacy');
+  // };
 
-  const openTerms = () => {
-    Linking.openURL('https://votre-site.com/terms');
-  };
+  // const openTerms = () => {
+  //   Linking.openURL('https://votre-site.com/terms');
+  // };
 
   const contactSupport = () => {
-    Linking.openURL('mailto:support@votre-site.com');
+    Linking.openURL('mailto:malaklakehal510@gmail.com');
   };
 
   return (
@@ -32,7 +32,7 @@ const AboutScreen = () => {
           Développée avec React Native, elle combine performance et élégance.
         </Text>
       </View>
-
+{/* 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Liens utiles</Text>
         <TouchableOpacity style={styles.linkItem} onPress={openWebsite}>
@@ -47,7 +47,7 @@ const AboutScreen = () => {
           <Ionicons name="document-text-outline" size={22} color="#3498db" />
           <Text style={styles.linkText}>Conditions d'utilisation</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Contact</Text>
@@ -58,7 +58,7 @@ const AboutScreen = () => {
       </View>
 
       <View style={styles.footer}>
-        <Text style={styles.copyright}>© 2023 Votre Société. Tous droits réservés.</Text>
+        <Text style={styles.copyright}>© 2025 Votre Société. Tous droits réservés.</Text>
       </View>
     </ScrollView>
   );

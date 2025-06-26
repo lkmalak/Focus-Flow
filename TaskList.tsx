@@ -173,7 +173,7 @@ const ToDoItem = ({
     <TouchableOpacity
       onPress={() => {
         deleteTodo(todo.id);
-        alert("Deleted " + todo.id);
+      
       }}
     >
       <Ionicons name="trash" size={24} color={"red"} />

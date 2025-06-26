@@ -1,31 +1,32 @@
 import React from 'react';
-import { View, Text, StyleSheet, Switch, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Switch, ScrollView, TouchableOpacity, Appearance } from 'react-native';
+import { useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StackActions } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const SettingsScreen = () => {
   const navigation = useNavigation();
-  const [isDarkMode, setIsDarkMode] = React.useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
-  const [biometricEnabled, setBiometricEnabled] = React.useState(false);
-
+  const [isDarkMode, setIsDarkMode] = React.useState("false");
+ 
+const handleLogout = async () => {
+  try {
+    // Clear user data from AsyncStorage
+    await AsyncStorage.clear();
+    // Navigate to the login screen
+    navigation.navigate('Home');
+  } catch (error) {
+    console.error('Error during logout:', error);
+  }
+};
   const settingsOptions = [
     {
       title: 'Compte',
       icon: 'person-outline',
-      onPress: () => navigation.navigate('AccountSettings'),
+      onPress: () => navigation.navigate('Profile'),
     },
-    {
-      title: 'Notifications',
-      icon: 'notifications-outline',
-      rightComponent: (
-        <Switch
-          value={notificationsEnabled}
-          onValueChange={setNotificationsEnabled}
-          trackColor={{ false: '#767577', true: '#81b0ff' }}
-        />
-      ),
-    },
+    
     {
       title: 'Thème sombre',
       icon: 'moon-outline',
@@ -38,34 +39,19 @@ const SettingsScreen = () => {
       ),
     },
     {
-      title: 'Authentification biométrique',
-      icon: 'finger-print-outline',
-      rightComponent: (
-        <Switch
-          value={biometricEnabled}
-          onValueChange={setBiometricEnabled}
-          trackColor={{ false: '#767577', true: '#81b0ff' }}
-        />
-      ),
-    },
-    {
-      title: 'Aide & Support',
-      icon: 'help-circle-outline',
-      onPress: () => navigation.navigate('Help'),
-    },
-    {
       title: 'À propos',
       icon: 'information-circle-outline',
       onPress: () => navigation.navigate('About'),
     },
-    {
-      title: 'Déconnexion',
-      icon: 'log-out-outline',
-      iconColor: '#e74c3c',
-      textColor: '#e74c3c',
-      onPress: () => navigation.navigate('Logout'),
-    },
-  ];
+  {
+    title: 'Déconnexion',
+    icon: 'log-out-outline',
+    onPress: handleLogout,
+  }
+ 
+]
+         
+  
 
   return (
     <ScrollView style={styles.container}>

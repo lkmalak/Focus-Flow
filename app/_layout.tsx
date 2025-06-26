@@ -4,15 +4,15 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import TabOneScreen from "./(tabs)";
-import TabTwoScreen from "./(tabs)/two";
+import TabOneScreen from "./(tabs)/Settings";
+import TabTwoScreen from "./(tabs)/Profile";
 import TaskList from "@/TaskList";
 import Header from "@/header";
 import home from "@/home";
 import { Dimensions } from "react-native";
-import Profile from "./(tabs)/two";
+import Profile from "./(tabs)/Profile";
 import LogoutScreen from "./Interfaces/Logout";
-import AboutScreen from "./(tabs)/_layout";
+import AboutScreen from "./(tabs)/about";
 
 
 
