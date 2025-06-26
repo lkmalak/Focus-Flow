@@ -12,8 +12,7 @@ const SettingsScreen = () => {
  
 const handleLogout = async () => {
   try {
-    // Clear user data from AsyncStorage
-    await AsyncStorage.clear();
+   await AsyncStorage.removeItem('user');
     // Navigate to the login screen
     navigation.navigate('Home');
   } catch (error) {

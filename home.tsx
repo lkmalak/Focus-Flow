@@ -14,15 +14,15 @@ const HomeScreen = () => {
     const fetchData = async () => {
       try {
         const storedName = await AsyncStorage.getItem('user');
-        const storedTasks = await AsyncStorage.getItem('tasks');
+        const storedTasks = await AsyncStorage.getItem('my-todo');
         if (storedName) {
           const parsedUser = JSON.parse(storedName);
           setUsername(parsedUser.username || '');
         }
         if (storedTasks) {
           const tasks = JSON.parse(storedTasks);
-          const completed = tasks.filter(t => t.completed).length;
-          const incomplete = tasks.filter(t => !t.completed).length;
+          const completed = tasks.filter(t => t.isDone).length;
+          const incomplete = tasks.filter(t => !t.isDone).length;
           setCompletedCount(completed);
           setIncompleteCount(incomplete);
         }

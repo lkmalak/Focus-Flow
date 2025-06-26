@@ -78,12 +78,7 @@ const ProfileScreen = () => {
   defaultSource={require('../../assets/images/inconnu.jpg')}
 />
         <Text style={styles.name}>{user.username}</Text>
-        <TouchableOpacity 
-          style={styles.editButton}
-          onPress={handleEditProfile}
-        >
-          <Ionicons name="create-outline" size={20} color="#fff" />
-        </TouchableOpacity>
+       
       </View>
 
       <View style={styles.section}>

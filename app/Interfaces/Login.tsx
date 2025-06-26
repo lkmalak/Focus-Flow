@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 interface LoginScreenProps {
   setIsLoggedIn: (value: boolean) => void;
   setIsSignup: (value: boolean) => void;
+  setIsLogout?: (value: boolean) => void;
 }
 
 export default function LoginScreen({ setIsLoggedIn, setIsSignup }: LoginScreenProps) {
@@ -37,6 +38,7 @@ export default function LoginScreen({ setIsLoggedIn, setIsSignup }: LoginScreenP
 
         await AsyncStorage.setItem("user", JSON.stringify(foundUser));
         setIsLoggedIn(true);
+        setIsLogout(false);
       } else {
         Alert.alert("Erreur", "Identifiants incorrects");
       }
@@ -115,3 +117,7 @@ const styles = StyleSheet.create({
     color: "#3498db" 
   },
 });
+
+function setIsLogout(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}

@@ -43,7 +43,7 @@ export default function Profile() {
 
   // Not logged in - show either signup or login screen
   return isSignup 
-    ? <LoginScreen setIsLoggedIn={setIsLoggedIn} setIsSignup={setIsSignup} />
+    ? <LoginScreen setIsLoggedIn={setIsLoggedIn} setIsSignup={setIsSignup}  />
     : <SignupScreen setIsSignup={setIsSignup} />;
 }
 
